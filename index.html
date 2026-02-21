@@ -220,12 +220,12 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
   background: var(--bg);
   border-top: 1px solid var(--border);
   display: flex; flex-direction: column; align-items: center;
-  padding: 10px 5px 12px; gap: 7px;
+  padding: 8px 8px 10px; gap: 5px;
   z-index: 20;
 }
 .key-row { display: flex; justify-content: center; gap: 5px; }
 .key {
-  height: 64px; min-width: 54px;
+  height: 45px; min-width: 35px;
   background: var(--surface2); border: 1px solid var(--border); border-radius: 4px;
   display: flex; align-items: center; justify-content: center;
   font-family: 'Space Mono', monospace; font-size: 12px; font-weight: 700;
@@ -235,7 +235,7 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 }
 .key:hover { background: #22223a; border-color: #4a4a7a; color: var(--text); }
 .key:active { transform: scale(0.93); }
-.key.wide { min-width: 76px; font-size: 14px; letter-spacing: 0.08em; }
+.key.wide { min-width: 56px; font-size: 10px; letter-spacing: 0.08em; }
 .key.correct { background: var(--green-dim); border-color: var(--neon); color: var(--neon); box-shadow: 0 0 6px rgba(0,245,196,0.2); }
 .key.present { background: var(--yellow-dim); border-color: var(--yellow); color: var(--yellow); }
 .key.absent  { background: #0d0d18; border-color: #1a1a28; color: #2e2e48; }
@@ -317,9 +317,9 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
   .board { padding: 6px 5px; }
   .board-lbl { font-size: 9px; margin-bottom: 3px; }
   .tile { font-size: 10px; }
-  .key { height: 38px; min-width: 28px; font-size: 11px; }
-  .key.wide { min-width: 46px; font-size: 9px; }
-  #keyboard { padding: 6px 6px 8px; gap: 4px; }
+  .key { height: 45px; min-width: 35px; font-size: 12px; }
+  .key.wide { min-width: 60px; font-size: 10px; }
+  #keyboard { padding: 6px 4px 8px; gap: 4px; }
 }
 </style>
 </head>
