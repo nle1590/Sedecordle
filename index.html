@@ -525,50 +525,20 @@ function focusInput(){
   inp.focus();
 }
 
-// Physical keyboard (desktop)
-document.addEventListener('keydown',e=>{
+// Single input handler — works for both desktop and mobile
+document.getElementById('hidden-input').addEventListener('keydown', e => {
   if(document.getElementById('game').classList.contains('hidden'))return;
   if(over)return;
-  if(document.activeElement===document.getElementById('hidden-input'))return;
-  if(e.ctrlKey||e.metaKey||e.altKey)return;
-  if(e.key==='Enter'){submit();return;}
+  if(e.key==='Enter'){e.preventDefault();submit();return;}
   if(e.key==='Backspace'){cur=cur.slice(0,-1);updateDisplay();return;}
   if(/^[a-zA-Z]$/.test(e.key)&&cur.length<5){cur+=e.key.toUpperCase();updateDisplay();}
 });
-// Mobile keyboard — listen to the hidden input
-(function(){
-  let lastVal='';
-  const inp=document.getElementById('hidden-input');
 
-  inp.addEventListener('input',()=>{
-    if(document.getElementById('game').classList.contains('hidden'))return;
-    if(over){inp.value='';return;}
-    const val=inp.value.replace(/[^a-zA-Z]/g,'').toUpperCase();
-    // Figure out what changed
-    if(val.length>lastVal.length){
-      // Character added
-      const added=val.slice(lastVal.length);
-      for(const ch of added){
-        if(cur.length<5) cur+=ch;
-      }
-    } else if(val.length<lastVal.length){
-      // Backspace
-      cur=cur.slice(0,-(lastVal.length-val.length));
-    }
-    lastVal=cur;
-    inp.value=cur; // keep in sync to allow further backspaces
-    updateDisplay();
-  });
-
-  inp.addEventListener('keydown',e=>{
-    if(e.key==='Enter'){e.preventDefault();submit();inp.value='';lastVal='';}
-  });
-
-  // Re-focus hidden input whenever the game board area is tapped
-  document.getElementById('boards') && document.getElementById('boards').addEventListener('click',()=>{
-    if(!over) focusInput();
-  });
-})();
+// Tap anywhere on the boards to re-focus
+document.addEventListener('click', e => {
+  if(document.getElementById('game').classList.contains('hidden'))return;
+  if(!over) focusInput();
+});
 </script>
 </body>
 </html>
