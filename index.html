@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>SEDECORDLE</title>
+<title>HEXADECADLE</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -134,14 +134,9 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 @keyframes fadeUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
 
 /* ── GAME SCREEN ─────────────────────────────────────────────── */
-#game { padding: 0 14px 28px; }
+#game { padding: 0; position: relative; }
 
-.game-header {
-  width: 100%; max-width: 1300px;
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 15px 0 13px; border-bottom: 1px solid var(--border);
-  margin-bottom: 12px; gap: 12px;
-}
+
 
 .game-logo {
   font-family: 'Space Mono', monospace; font-size: clamp(10px,1.5vw,15px);
@@ -254,8 +249,8 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 }
 @keyframes sbFade { from{opacity:0} to{opacity:1} }
 
-.board-grid { display: grid; grid-template-rows: repeat(21,1fr); gap: 3px; }
-.board-row { display: grid; grid-template-columns: repeat(5,1fr); gap: 3px; height: 26px; }
+.board-grid { display: flex; flex-direction: column; gap: 3px; }
+.board-row { display: grid; grid-template-columns: repeat(5,1fr); gap: 3px; height: 30px; flex-shrink: 0; }
 
 .tile {
   width: 100%; height: 100%;
@@ -298,7 +293,7 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 /* ── RESPONSIVE ──────────────────────────────────────────────── */
 @media (max-width: 680px) {
   #boards { grid-template-columns: repeat(2, 1fr); gap: 7px; }
-  .board-row { height: 28px; gap: 3px; }
+  .board-row { height: 32px; gap: 3px; }
   .tile { font-size: 11px; border-radius: 2px; }
   .board-grid { gap: 2px; }
   .board { padding: 8px 7px; }
@@ -308,7 +303,7 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
   .key.wide { min-width: 48px; font-size: 9px; }
 }
 @media (max-width: 400px) {
-  .board-row { height: 24px; }
+  .board-row { height: 28px; }
   .tile { font-size: 10px; }
   .key { height: 38px; min-width: 27px; font-size: 10px; }
   .key.wide { min-width: 44px; }
@@ -327,11 +322,19 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 
     <div class="landing-eyebrow">A word puzzle for the obsessed</div>
 
-    <div class="landing-title">SEDECORDLE</div>
+    <div class="landing-title">HEXA<span class="acc">DECA</span>DLE</div>
 
     <div class="landing-tagline">
       16 words. 21 guesses. All boards, all at once.<br>
       Think you can crack them all?
+    </div>
+
+    <div class="tile-strip">
+      <div class="strip-tile c"></div>
+      <div class="strip-tile a"></div>
+      <div class="strip-tile p"></div>
+      <div class="strip-tile c"></div>
+      <div class="strip-tile a"></div>
     </div>
 
     <div class="stat-cards">
@@ -369,7 +372,7 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
   <!-- Fixed top: header + input + message -->
   <div id="game-top">
     <div class="game-header">
-      <div class="game-logo">SEDECORDLE</div>
+      <div class="game-logo">HEXADECADLE</div>
       <div class="game-stats">
         <div class="gstat"><div class="gstat-val" id="s-solved">0</div><div class="gstat-lbl">Solved</div></div>
         <div class="sdiv"></div>
@@ -487,12 +490,16 @@ function updateKeyboard(){
 
 // ── PADDING ───────────────────────────────────────────────────────
 function adjustPadding(){
-  const top=document.getElementById('game-top');
+  const topEl=document.getElementById('game-top');
   const kb=document.getElementById('keyboard');
   const wrap=document.getElementById('boards-wrap');
-  if(top&&kb&&wrap){
-    wrap.style.paddingTop=(top.offsetHeight+10)+'px';
-    wrap.style.paddingBottom=(kb.offsetHeight+10)+'px';
+  if(topEl&&kb&&wrap){
+    const topH=topEl.offsetHeight;
+    const kbH=kb.offsetHeight;
+    wrap.style.top=topH+'px';
+    wrap.style.bottom=kbH+'px';
+    wrap.style.paddingTop='14px';
+    wrap.style.paddingBottom='14px';
   }
 }
 
