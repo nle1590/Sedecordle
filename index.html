@@ -455,9 +455,10 @@ function previewRow(){
 async function submit(){
   if(over)return;
   if(cur.length!==5){showMsg('5 LETTERS REQUIRED');shakeRow();return;}
+  if(guesses.includes(cur)){showMsg('ALREADY GUESSED');shakeRow();clearCurrentRow();cur='';updateDisplay();return;}
   showMsg('CHECKING...');
   const v=await isValid(cur.toLowerCase());
-  if(!v){showMsg('NOT IN DICTIONARY');shakeRow();return;}
+  if(!v){showMsg('NOT IN DICTIONARY');shakeRow();clearCurrentRow();cur='';updateDisplay();return;}
 
   const ri=guesses.length;
   guesses.push(cur);
@@ -487,6 +488,17 @@ function shakeRow(){
   for(let b=0;b<NB;b++){
     if(solved.has(b))continue;
     for(let c2=0;c2<5;c2++){const t=document.getElementById(`t${b}-${r}-${c2}`);if(t){t.classList.add('shake');setTimeout(()=>t.classList.remove('shake'),420);}}
+  }
+}
+
+function clearCurrentRow(){
+  const r=guesses.length;
+  for(let b=0;b<NB;b++){
+    if(solved.has(b))continue;
+    for(let c2=0;c2<5;c2++){
+      const t=document.getElementById(`t${b}-${r}-${c2}`);
+      if(t){t.textContent='';t.className='tile';}
+    }
   }
 }
 
