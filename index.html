@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>HEXADECADLE</title>
+<title>SEDECORDLE</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -292,19 +292,20 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 
 /* ── RESPONSIVE ──────────────────────────────────────────────── */
 @media (max-width: 680px) {
-  #boards { grid-template-columns: repeat(2, 1fr); gap: 7px; }
-  .board-row { height: 32px; gap: 3px; }
-  .tile { font-size: 11px; border-radius: 2px; }
-  .board-grid { gap: 2px; }
-  .board { padding: 8px 7px; }
-  .board-lbl { font-size: 9px; }
+  /* 1 column — full width boards, big readable tiles */
+  #boards { grid-template-columns: 1fr; gap: 12px; }
+  .board-row { height: 42px; gap: 4px; }
+  .board-grid { gap: 4px; }
+  .board { padding: 10px; }
+  .board-lbl { font-size: 11px; margin-bottom: 6px; }
+  .tile { font-size: 16px; border-radius: 3px; }
   .stat-cards { grid-template-columns: 1fr; }
   .key { height: 40px; min-width: 30px; font-size: 11px; }
   .key.wide { min-width: 48px; font-size: 9px; }
 }
 @media (max-width: 400px) {
-  .board-row { height: 28px; }
-  .tile { font-size: 10px; }
+  .board-row { height: 36px; gap: 3px; }
+  .tile { font-size: 14px; }
   .key { height: 38px; min-width: 27px; font-size: 10px; }
   .key.wide { min-width: 44px; }
 }
@@ -322,19 +323,11 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 
     <div class="landing-eyebrow">A word puzzle for the obsessed</div>
 
-    <div class="landing-title">HEXA<span class="acc">DECA</span>DLE</div>
+    <div class="landing-title">SEDECORDLE</div>
 
     <div class="landing-tagline">
       16 words. 21 guesses. All boards, all at once.<br>
       Think you can crack them all?
-    </div>
-
-    <div class="tile-strip">
-      <div class="strip-tile c"></div>
-      <div class="strip-tile a"></div>
-      <div class="strip-tile p"></div>
-      <div class="strip-tile c"></div>
-      <div class="strip-tile a"></div>
     </div>
 
     <div class="stat-cards">
@@ -372,7 +365,7 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
   <!-- Fixed top: header + input + message -->
   <div id="game-top">
     <div class="game-header">
-      <div class="game-logo">HEXADECADLE</div>
+      <div class="game-logo">SEDECORDLE</div>
       <div class="game-stats">
         <div class="gstat"><div class="gstat-val" id="s-solved">0</div><div class="gstat-lbl">Solved</div></div>
         <div class="sdiv"></div>
