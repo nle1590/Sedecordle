@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Sedecordle</title>
+<title>SEDECORDLE</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -163,13 +163,29 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 .ng-btn:hover { border-color: var(--neon); color: var(--neon); box-shadow: var(--neon-glow-sm); }
 .ng-btn:active { transform: scale(0.96); }
 
+/* Fixed top bar */
+#game-top {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 20;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  display: flex; flex-direction: column; align-items: center;
+  padding: 12px 14px 8px;
+}
+#game-top .game-header {
+  width: 100%; max-width: 1300px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 0 10px; border-bottom: 1px solid var(--border);
+  margin-bottom: 8px; gap: 12px;
+}
+
 /* Input */
-#input-bar { width: 100%; max-width: 1300px; margin-bottom: 10px; }
+#input-bar { width: 100%; max-width: 1300px; margin-bottom: 6px; }
 #guess-display {
-  width: 100%; height: 46px; background: var(--surface); border: 1px solid var(--neon); border-radius: 4px;
+  width: 100%; height: 44px; background: var(--surface); border: 1px solid var(--neon); border-radius: 4px;
   display: flex; align-items: center; padding: 0 18px; gap: 2px;
   font-family: 'Space Mono', monospace; font-size: clamp(18px,2.8vw,26px); letter-spacing: 0.28em;
   box-shadow: 0 0 0 1px var(--neon-dim), inset 0 0 24px var(--neon-dim);
+  cursor: text;
 }
 .gletter { display:inline-block; min-width:16px; text-align:center; color:var(--text); animation: lPop 0.1s ease; }
 @keyframes lPop { from{transform:scale(0.6);opacity:0.2} to{transform:scale(1);opacity:1} }
@@ -177,13 +193,38 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
 
 #message {
-  width: 100%; max-width: 1300px; height: 20px;
+  width: 100%; max-width: 1300px; height: 18px;
   display: flex; align-items: center; justify-content: center;
   font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.18em;
   color: var(--neon); text-shadow: var(--neon-glow-sm); text-transform: uppercase;
-  margin-bottom: 10px; opacity: 0; transition: opacity 0.25s;
+  opacity: 0; transition: opacity 0.25s;
 }
 #message.show { opacity: 1; }
+
+/* Fixed keyboard */
+#keyboard {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 20;
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+  display: flex; flex-direction: column; align-items: center;
+  padding: 10px 8px 12px; gap: 6px;
+}
+.key-row { display: flex; justify-content: center; gap: 5px; }
+.key {
+  height: 44px; min-width: 34px;
+  background: var(--surface2); border: 1px solid var(--border); border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Space Mono', monospace; font-size: 12px; font-weight: 700;
+  color: var(--text-mid); cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+  user-select: none; padding: 0 6px;
+}
+.key:hover { background: #22223a; border-color: #4a4a7a; color: var(--text); }
+.key:active { transform: scale(0.93); }
+.key.wide { min-width: 56px; font-size: 10px; letter-spacing: 0.08em; }
+.key.correct { background: var(--green-dim); border-color: var(--neon); color: var(--neon); box-shadow: 0 0 6px rgba(0,245,196,0.2); }
+.key.present { background: var(--yellow-dim); border-color: var(--yellow); color: var(--yellow); }
+.key.absent  { background: #0d0d18; border-color: #1a1a28; color: #2e2e48; }
 
 /* ── BOARDS ──────────────────────────────────────────────────── */
 #boards {
@@ -263,10 +304,14 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
   .board { padding: 8px 7px; }
   .board-lbl { font-size: 9px; }
   .stat-cards { grid-template-columns: 1fr; }
+  .key { height: 40px; min-width: 30px; font-size: 11px; }
+  .key.wide { min-width: 48px; font-size: 9px; }
 }
 @media (max-width: 400px) {
   .board-row { height: 17px; }
   .tile { font-size: 8px; }
+  .key { height: 38px; min-width: 27px; font-size: 10px; }
+  .key.wide { min-width: 44px; }
 }
 </style>
 </head>
@@ -321,31 +366,42 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 <!-- ══ GAME ══ -->
 <div class="screen hidden" id="game">
 
-  <div class="game-header">
-    <div class="game-logo">Sedecordle</div>
-    <div class="game-stats">
-      <div class="gstat"><div class="gstat-val" id="s-solved">0</div><div class="gstat-lbl">Solved</div></div>
-      <div class="sdiv"></div>
-      <div class="gstat"><div class="gstat-val" id="s-guesses">21</div><div class="gstat-lbl">Guesses</div></div>
-      <div class="sdiv"></div>
-      <div class="gstat"><div class="gstat-val" id="s-boards">16</div><div class="gstat-lbl">Remaining</div></div>
+  <!-- Fixed top: header + input + message -->
+  <div id="game-top">
+    <div class="game-header">
+      <div class="game-logo">SEDECORDLE</div>
+      <div class="game-stats">
+        <div class="gstat"><div class="gstat-val" id="s-solved">0</div><div class="gstat-lbl">Solved</div></div>
+        <div class="sdiv"></div>
+        <div class="gstat"><div class="gstat-val" id="s-guesses">21</div><div class="gstat-lbl">Guesses</div></div>
+        <div class="sdiv"></div>
+        <div class="gstat"><div class="gstat-val" id="s-boards">16</div><div class="gstat-lbl">Remaining</div></div>
+      </div>
+      <button class="ng-btn" onclick="confirmNew()">NEW GAME</button>
     </div>
-    <button class="ng-btn" onclick="confirmNew()">NEW GAME</button>
-  </div>
-
-  <div id="message"></div>
-
-  <div id="input-bar">
     <input id="hidden-input" type="text" autocomplete="off" autocorrect="off"
       autocapitalize="characters" spellcheck="false" inputmode="text"
-      style="position:fixed;opacity:0;width:1px;height:1px;left:0;top:0;font-size:16px;pointer-events:none;">
-    <div id="guess-display" onclick="focusInput()" style="cursor:text;">
-      <span id="gletters"></span>
-      <span class="gcursor"></span>
+      style="position:absolute;opacity:0;width:1px;height:1px;left:0;top:0;font-size:16px;pointer-events:none;">
+    <div id="input-bar">
+      <div id="guess-display" onclick="focusInput()">
+        <span id="gletters"></span>
+        <span class="gcursor"></span>
+      </div>
     </div>
+    <div id="message"></div>
   </div>
 
-  <div id="boards"></div>
+  <!-- Scrollable boards — padding top/bottom reserves space for fixed bars -->
+  <div id="boards-wrap">
+    <div id="boards"></div>
+  </div>
+
+  <!-- Fixed keyboard -->
+  <div id="keyboard">
+    <div class="key-row" id="kb-row-1"></div>
+    <div class="key-row" id="kb-row-2"></div>
+    <div class="key-row" id="kb-row-3"></div>
+  </div>
 
 </div>
 
@@ -386,12 +442,70 @@ function startGame(){show('game');initGame();setTimeout(focusInput,100);}
 function goHome(){document.getElementById('end-overlay').classList.remove('show');show('landing');}
 function confirmNew(){if(!over&&guesses.length>0){if(!confirm('Start a new game? Progress will be lost.'))return;}initGame();}
 
+// ── KEYBOARD ─────────────────────────────────────────────────────
+const KB_ROWS = [
+  ['Q','W','E','R','T','Y','U','I','O','P'],
+  ['A','S','D','F','G','H','J','K','L'],
+  ['ENTER','Z','X','C','V','B','N','M','⌫']
+];
+
+function buildKeyboard(){
+  KB_ROWS.forEach((row,ri)=>{
+    const el=document.getElementById(`kb-row-${ri+1}`);
+    el.innerHTML='';
+    row.forEach(k=>{
+      const btn=document.createElement('button');
+      btn.className='key'+(k.length>1?' wide':'');
+      btn.textContent=k; btn.dataset.key=k;
+      btn.addEventListener('click',()=>handleKeyPress(k));
+      el.appendChild(btn);
+    });
+  });
+}
+
+function handleKeyPress(k){
+  if(over)return;
+  if(k==='ENTER'){submit();return;}
+  if(k==='⌫'){cur=cur.slice(0,-1);updateDisplay();return;}
+  if(/^[A-Z]$/.test(k)&&cur.length<5){cur+=k;updateDisplay();}
+}
+
+function updateKeyboard(){
+  const state={};
+  guesses.forEach(g=>{
+    for(let b=0;b<NB;b++){
+      if(solved.has(b))continue;
+      const res=scoreGuess(g,targets[b]);
+      for(let i=0;i<5;i++){
+        const l=g[i], s=res[i], cur2=state[l];
+        if(!cur2||(s==='correct')||(s==='present'&&cur2==='absent')) state[l]=s;
+      }
+    }
+  });
+  document.querySelectorAll('.key').forEach(btn=>{
+    const k=btn.dataset.key;
+    if(k&&k.length===1) btn.className='key '+(state[k]||'');
+  });
+}
+
+// ── PADDING ───────────────────────────────────────────────────────
+function adjustPadding(){
+  const top=document.getElementById('game-top');
+  const kb=document.getElementById('keyboard');
+  const wrap=document.getElementById('boards-wrap');
+  if(top&&kb&&wrap){
+    wrap.style.paddingTop=(top.offsetHeight+10)+'px';
+    wrap.style.paddingBottom=(kb.offsetHeight+10)+'px';
+  }
+}
+
 // ── INIT ──────────────────────────────────────────────────────────
 function initGame(){
   targets=[...WORDS].sort(()=>Math.random()-0.5).slice(0,NB).map(w=>w.toUpperCase());
   guesses=[];cur='';over=false;solved=new Set();
   document.getElementById('end-overlay').classList.remove('show');
-  buildBoards();updateStats();updateDisplay();showMsg('');
+  buildBoards();buildKeyboard();updateStats();updateDisplay();showMsg('');
+  setTimeout(adjustPadding,50);
 }
 
 // ── BUILD BOARDS ──────────────────────────────────────────────────
@@ -468,7 +582,7 @@ async function submit(){
     }
   }
 
-  updateStats();cur='';updateDisplay();
+  updateStats();updateKeyboard();cur='';updateDisplay();
   const rem=NB-solved.size;
   if(rem===0){showMsg('BRILLIANT!');setTimeout(()=>endGame(true),900);}
   else if(guesses.length>=MG){showMsg('GAME OVER');setTimeout(()=>endGame(false),900);}
@@ -533,10 +647,12 @@ function focusInput(){
 document.getElementById('hidden-input').addEventListener('keydown', e => {
   if(document.getElementById('game').classList.contains('hidden'))return;
   if(over)return;
-  if(e.key==='Enter'){e.preventDefault();submit();return;}
-  if(e.key==='Backspace'){cur=cur.slice(0,-1);updateDisplay();return;}
-  if(/^[a-zA-Z]$/.test(e.key)&&cur.length<5){cur+=e.key.toUpperCase();updateDisplay();}
+  if(e.key==='Enter'){e.preventDefault();handleKeyPress('ENTER');return;}
+  if(e.key==='Backspace'){e.preventDefault();handleKeyPress('⌫');return;}
+  if(/^[a-zA-Z]$/.test(e.key)&&cur.length<5){handleKeyPress(e.key.toUpperCase());}
 });
+
+window.addEventListener('resize', adjustPadding);
 
 // Tap anywhere on the boards to re-focus
 document.addEventListener('click', e => {
